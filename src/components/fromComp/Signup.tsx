@@ -1,9 +1,74 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextField } from '@mui/material';
 import DatePickerInput from '../fromComp/DatePickrInput';
 import { Icon } from '@iconify/react';
+import GoogleLogin from './GoogleAuth';
+import { useStore } from 'zustand';
+import useUserStore, { type User } from '../store/userStore';
+import { useNavigate } from 'react-router-dom';
+
+
+interface SendOtpResponse {
+  message: string;
+}
+
+interface VerifyOtpResponse {
+  token: string;
+}
+
 
 const SignUp: React.FC = () => {
+  const navigate = useNavigate()
+  const [message, setMessage] = useState("")
+  const [email, setEmail] = useState("")
+  const [name, setName] = useState("")
+
+
+  const [otp, setOTP] = useState("")
+
+  const [step, setStep] = useState("")
+  const { setUser }: {
+    setUser: (data: User | null) => void
+  } = useUserStore();
+
+
+
+  const sendOtp = async (email: string, name: string): Promise<void> => {
+    if (!email) {
+      alert("enter email first")
+    }
+    if (!name) {
+      alert("enter name first")
+    }
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/send-email-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, name }),
+      });
+
+      const data: SendOtpResponse = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to send OTP");
+      }
+
+      setMessage(data.message);
+      setStep("otp");
+      setUser({ email, name })
+      navigate("/signin")
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setMessage(error.message);
+      } else {
+        setMessage("Failed to send OTP");
+      }
+    }
+  };
+
+  
   return (
     <div>
       <div className="p-2 py-5 flex h-screen">
@@ -25,17 +90,21 @@ const SignUp: React.FC = () => {
                 <p className="text-3xl font-semibold">Sign up</p>
                 <p className="text-gray-500">Sign up to enjoy the features of HD</p>
               </div>
-
+              <GoogleLogin  />
               {/* Form Fields */}
               <div className="w-full h-full flex flex-col gap-4">
-                <TextField id="name" label="Your Name" variant="outlined" size="small" />
+                <TextField onChange={(e) => {
+                    setName(e.target.value)
+                  }} id="name" label="Your Name" variant="outlined" size="small" />
                 <div className="w-full">
                   <DatePickerInput />
                 </div>
-                <TextField id="email" label="Email" variant="outlined" size="small" />
+                <TextField onChange={(e) => {
+                    setEmail(e.target.value)
+                  }} id="email" label="Email" variant="outlined" size="small" />
 
-                <button className="text-lg bg-blue-700 text-white font-semibold p-1.5 w-full rounded-sm">
-                  Get OTP
+                <button onClick={() => sendOtp(email, name)} className="text-lg bg-blue-700 text-white font-semibold p-1.5 w-full rounded-sm hover:cursor-pointer">
+                  Sign Up
                 </button>
 
                 <div className="text-center text-gray-500">

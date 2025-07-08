@@ -1,8 +1,11 @@
 import { Icon } from "@iconify/react/dist/iconify.js"
+import { useAuth } from "../auth/AuthProvider"
 
 
 
 function Header() {
+    const {logout} = useAuth()
+  
   return (
     <div className="flex flex-col gap-10">
               <div className="flex justify-between items-center">
@@ -11,7 +14,7 @@ function Header() {
                   Dashboard
                 </div>
                 <div className='w-full flex justify-end'>
-                  <button className="text-blue-700 border-b border-blue-700">Sign Out</button>
+                  <button onClick={logout} className="text-blue-700 border-b border-blue-700 hover:cursor-pointer">Sign Out</button>
                 </div>
               </div>
     

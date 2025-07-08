@@ -4,6 +4,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { Link } from 'react-router-dom';
 import Header from './Header';
 import RightPanel from './RightPanel';
+import { useAuth } from '../auth/AuthProvider';
 
 type Note = {
   _id: string;
@@ -13,6 +14,7 @@ type Note = {
 
 
 const Dashboard: React.FC = () => {
+  const {logout} = useAuth()
   const [isUpdated, setIsUpdated] = useState<boolean>(false)
   const [isNewNote, setIsNewNote] = useState<boolean>(false);
   const [notes, setNotes] = useState<Note[]>([]);
@@ -83,7 +85,7 @@ const Dashboard: React.FC = () => {
         : `${import.meta.env.VITE_API_URL}/create-notes/`;
 
       const method = editMode ? "PUT" : "POST";
-      const token = localStorage.getItem("token")
+        const token = localStorage.getItem("access_token")
       const fetchData = await fetch(url, {
         method,
         headers: {
@@ -108,6 +110,7 @@ const Dashboard: React.FC = () => {
       // setEditNoteId(null);
 
     } catch (err: any) {
+      logout()
       console.log("Something Went Wrong ..! ", err);
       alert(err.message)
     }
@@ -116,7 +119,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("access_token")
 
         const res = await fetch(`${import.meta.env.VITE_API_URL}/all-notes`, {
           headers: {
@@ -127,6 +130,7 @@ const Dashboard: React.FC = () => {
         const data = await res.json();
         setNotes(data);
       } catch (err) {
+        logout()
         console.error('Failed to fetch notes', err);
       }
     };
@@ -138,7 +142,7 @@ const Dashboard: React.FC = () => {
   // Delete Note
   const deleteNote = async (id: string) => {
     try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("access_token")
 
       const res = await fetch(`${import.meta.env.VITE_API_URL}/delete/${id}`, {
         method: 'DELETE',
@@ -158,6 +162,7 @@ const Dashboard: React.FC = () => {
         description: ""
       })
     } catch (err) {
+      logout()
       console.error('Error deleting note:', err);
       alert('Failed to delete note.');
     }

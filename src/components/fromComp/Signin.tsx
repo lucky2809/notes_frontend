@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import type { User } from '../store/userStore';
+import useUserStore from '../store/userStore';
+import GoogleLogin from './GoogleAuth';
 
 interface SendOtpResponse {
   message: string;
@@ -13,74 +16,77 @@ interface VerifyOtpResponse {
 
 
 const Signin: React.FC = () => {
+    const { user }: {
+    user: User | null,
+  } = useUserStore();
   const navigate = useNavigate()
   const [message, setMessage] = useState("")
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState(user?.email || "")
   const [otp, setOTP] = useState("")
-
-
   const [step, setStep] = useState("")
 
 
-  const sendOtp = async (email :string): Promise<void> => {
-    if(!email) {
+
+
+  const sendOtp = async (email: string): Promise<void> => {
+    if (!email) {
       alert("enter email first")
     }
-  try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/send-email-otp`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
-    });
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/send-email-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
 
-    const data: SendOtpResponse = await response.json();
+      const data: SendOtpResponse = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to send OTP");
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to send OTP");
+      }
+
+      setMessage(data.message);
+      setStep("otp");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setMessage(error.message);
+      } else {
+        setMessage("Failed to send OTP");
+      }
     }
+  };
 
-    setMessage(data.message);
-    setStep("otp");
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      setMessage(error.message);
-    } else {
-      setMessage("Failed to send OTP");
+  const verifyOtp = async (): Promise<void> => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/verify-email-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      const data: VerifyOtpResponse = await response.json();
+
+      if (!response.ok) {
+        throw new Error("Invalid or expired OTP");
+      }
+
+      localStorage.setItem("access_token", data.token);
+      localStorage.setItem("user_email", email);
+
+      setMessage("OTP Verified. You are logged in.");
+      navigate("/")
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setMessage(error.message);
+      } else {
+        setMessage("Failed to verify OTP");
+      }
     }
-  }
-};
-
-const verifyOtp = async (): Promise<void> => {
-  try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/verify-email-otp`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, otp }),
-    });
-
-    const data: VerifyOtpResponse = await response.json();
-
-    if (!response.ok) {
-      throw new Error("Invalid or expired OTP");
-    }
-
-    localStorage.setItem("access_token", data.token);
-    localStorage.setItem("user_email", email);
-
-    setMessage("OTP Verified. You are logged in.");
-    navigate("/")
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      setMessage(error.message);
-    } else {
-      setMessage("Failed to verify OTP");
-    }
-  }
-};
+  };
 
 
 
@@ -141,8 +147,10 @@ const verifyOtp = async (): Promise<void> => {
                 </div>
 
                 <button onClick={verifyOtp} className="text-lg bg-blue-700 text-white font-semibold p-1.5 w-full rounded-sm">
-                  Sign in
+                  Sign in With OTP
                 </button>
+
+                <GoogleLogin />
 
                 <div className="text-center text-gray-500">
                   <p>
