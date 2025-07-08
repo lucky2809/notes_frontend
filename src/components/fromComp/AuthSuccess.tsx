@@ -18,7 +18,7 @@ const OAuthSuccess = () => {
       navigate("/");
     } else {
       // Redirect to login if no token found
-      navigate("/login");
+    //   navigate("/login");
     }
   }, [navigate]);
 
