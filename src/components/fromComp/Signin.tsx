@@ -20,10 +20,9 @@ const Signin: React.FC = () => {
     user: User | null,
   } = useUserStore();
   const navigate = useNavigate()
-  const [message, setMessage] = useState("")
+
   const [email, setEmail] = useState(user?.email || "")
   const [otp, setOTP] = useState("")
-  const [step, setStep] = useState("")
 
 
 
@@ -47,14 +46,11 @@ const Signin: React.FC = () => {
         throw new Error(data.message || "Failed to send OTP");
       }
 
-      setMessage(data.message);
-      setStep("otp");
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setMessage(error.message);
-      } else {
-        setMessage("Failed to send OTP");
-      }
+        // setMessage(error.message);
+        console.error(error.message)
+      } 
     }
   };
 
@@ -77,13 +73,13 @@ const Signin: React.FC = () => {
       localStorage.setItem("access_token", data.token);
       localStorage.setItem("user_email", email);
 
-      setMessage("OTP Verified. You are logged in.");
+      console.log("OTP Verified. You are logged in.");
       navigate("/")
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setMessage(error.message);
+        console.error(error.message);
       } else {
-        setMessage("Failed to verify OTP");
+        console.error("Failed to verify OTP");
       }
     }
   };

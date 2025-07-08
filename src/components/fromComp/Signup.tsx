@@ -3,7 +3,7 @@ import { TextField } from '@mui/material';
 import DatePickerInput from '../fromComp/DatePickrInput';
 import { Icon } from '@iconify/react';
 import GoogleLogin from './GoogleAuth';
-import { useStore } from 'zustand';
+
 import useUserStore, { type User } from '../store/userStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,21 +12,17 @@ interface SendOtpResponse {
   message: string;
 }
 
-interface VerifyOtpResponse {
-  token: string;
-}
+// interface VerifyOtpResponse {
+//   token: string;
+// }
 
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate()
-  const [message, setMessage] = useState("")
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
 
 
-  const [otp, setOTP] = useState("")
-
-  const [step, setStep] = useState("")
   const { setUser }: {
     setUser: (data: User | null) => void
   } = useUserStore();
@@ -55,20 +51,16 @@ const SignUp: React.FC = () => {
         throw new Error(data.message || "Failed to send OTP");
       }
 
-      setMessage(data.message);
-      setStep("otp");
       setUser({ email, name })
       navigate("/signin")
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setMessage(error.message);
-      } else {
-        setMessage("Failed to send OTP");
+        console.error(error.message)
       }
     }
   };
 
-  
+
   return (
     <div>
       <div className="p-2 py-5 flex h-screen">
@@ -90,18 +82,18 @@ const SignUp: React.FC = () => {
                 <p className="text-3xl font-semibold">Sign up</p>
                 <p className="text-gray-500">Sign up to enjoy the features of HD</p>
               </div>
-              <GoogleLogin  />
+              <GoogleLogin />
               {/* Form Fields */}
               <div className="w-full h-full flex flex-col gap-4">
                 <TextField onChange={(e) => {
-                    setName(e.target.value)
-                  }} id="name" label="Your Name" variant="outlined" size="small" />
+                  setName(e.target.value)
+                }} id="name" label="Your Name" variant="outlined" size="small" />
                 <div className="w-full">
                   <DatePickerInput />
                 </div>
                 <TextField onChange={(e) => {
-                    setEmail(e.target.value)
-                  }} id="email" label="Email" variant="outlined" size="small" />
+                  setEmail(e.target.value)
+                }} id="email" label="Email" variant="outlined" size="small" />
 
                 <button onClick={() => sendOtp(email, name)} className="text-lg bg-blue-700 text-white font-semibold p-1.5 w-full rounded-sm hover:cursor-pointer">
                   Sign Up

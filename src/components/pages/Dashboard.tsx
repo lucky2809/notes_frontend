@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
-import TextareaAutosize from 'react-textarea-autosize';
-import { Link } from 'react-router-dom';
 import Header from './Header';
 import RightPanel from './RightPanel';
 import { useAuth } from '../auth/AuthProvider';
