@@ -23,7 +23,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_URL = "http://localhost:8000/api"; // Change for production
+const API_URL = import.meta.env.VITE_APP_URL; // Change for production
 
 export const AuthProvider = ({ children }: { children: any }) => {
     const navigate = useNavigate()
