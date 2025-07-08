@@ -1,7 +1,7 @@
 // GoogleLogin.tsx
 import React from "react";
 
-const GOOGLE_AUTH_URL = `${import.meta.env.VITE_APP_URL}/auth/google`; // Change to your backend URL
+const GOOGLE_AUTH_URL = `${import.meta.env.VITE_API_URL}/auth/google`; // Change to your backend URL
 
 const GoogleLogin: React.FC = () => {
   const handleGoogleLogin = () => {
