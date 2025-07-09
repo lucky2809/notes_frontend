@@ -15,12 +15,21 @@ interface SendOtpResponse {
 // interface VerifyOtpResponse {
 //   token: string;
 // }
+type ErrorMessageProps = {
+  error: Record<string, string>;
+  field: string;
+};
+
+const ErrorMessage: React.FC<ErrorMessageProps> = ({ error, field }) => {
+  return error[field] ? <p className="text-red-500 m-0 p-0">{error[field]}</p> : null;
+};
 
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
+  const [error, setError] = useState({})
 
 
   const { setUser }: {
@@ -30,12 +39,19 @@ const SignUp: React.FC = () => {
 
 
   const sendOtp = async (email: string, name: string): Promise<void> => {
-    if (!email) {
-      alert("enter email first")
+        if(!name) {
+      setError(prev => ({...prev, name: "Enter Nmae"}))
+      // return
+    } else {
+      setError(prev => ({...prev, name: ""}))
     }
-    if (!name) {
-      alert("enter name first")
-    }
+     if (!email) {
+      setError(prev => ({ ...prev, email: "Email is required" }))
+      return
+    }  else {
+            setError(prev => ({ ...prev, email: "" }))
+        }
+
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/send-email-otp`, {
         method: "POST",
@@ -76,7 +92,7 @@ const SignUp: React.FC = () => {
           </div>
 
           <div className="w-full flex flex-col justify-center max-md:justify-start max-md:text-center align-middle px-25 max-xl:px-5 max-lg:px-20 max-md:px-3  h-full max-md:h-fit">
-            <div className="flex flex-col gap-4">
+            <div className={`w-full flex flex-col ${Object.keys(error).length ? "gap-1" : "gap-4"}`}>
               {/* Sign Up Text */}
               <div className="flex flex-col gap-1">
                 <p className="text-3xl font-semibold">Sign up</p>
@@ -88,12 +104,16 @@ const SignUp: React.FC = () => {
                 <TextField onChange={(e) => {
                   setName(e.target.value)
                 }} id="name" label="Your Name" variant="outlined" size="small" />
+                <ErrorMessage error={error} field={"name"} />
+
                 <div className="w-full">
                   <DatePickerInput />
                 </div>
                 <TextField onChange={(e) => {
                   setEmail(e.target.value)
                 }} id="email" label="Email" variant="outlined" size="small" />
+                <ErrorMessage error={error} field={"email"} />
+
 
                 <button onClick={() => sendOtp(email, name)} className="text-lg bg-blue-700 text-white font-semibold p-1.5 w-full rounded-sm hover:cursor-pointer">
                   Sign Up

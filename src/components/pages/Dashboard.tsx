@@ -12,7 +12,7 @@ type Note = {
 
 
 const Dashboard: React.FC = () => {
-  const {logout} = useAuth()
+  const { logout } = useAuth()
   const [isUpdated, setIsUpdated] = useState<boolean>(false)
   const [isNewNote, setIsNewNote] = useState<boolean>(false);
   const [notes, setNotes] = useState<Note[]>([]);
@@ -83,7 +83,7 @@ const Dashboard: React.FC = () => {
         : `${import.meta.env.VITE_API_URL}/create-notes/`;
 
       const method = editMode ? "PUT" : "POST";
-        const token = localStorage.getItem("access_token")
+      const token = localStorage.getItem("access_token")
       const fetchData = await fetch(url, {
         method,
         headers: {
@@ -125,8 +125,18 @@ const Dashboard: React.FC = () => {
             "Authorization": `Bearer ${token}`,
           },
         });
+        if (res.status === 401) {
+          const error = await res.json();
+          throw new Error(error.message || "Auth Error")
+        }
+        if (!res.ok) {
+          const data = await res.json();
+          console.error(data)
+          return
+        }
         const data = await res.json();
         setNotes(data);
+
       } catch (err) {
         logout()
         console.error('Failed to fetch notes', err);
@@ -140,11 +150,11 @@ const Dashboard: React.FC = () => {
   // Delete Note
   const deleteNote = async (id: string) => {
     try {
-        const token = localStorage.getItem("access_token")
+      const token = localStorage.getItem("access_token")
 
       const res = await fetch(`${import.meta.env.VITE_API_URL}/delete/${id}`, {
         method: 'DELETE',
-         headers: {
+        headers: {
           "Content-type": "application/json",
           "Authorization": `Bearer ${token}`,
         },

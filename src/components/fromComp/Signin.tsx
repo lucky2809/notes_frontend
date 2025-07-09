@@ -14,23 +14,36 @@ interface VerifyOtpResponse {
   token: string;
 }
 
+type ErrorMessageProps = {
+  error: Record<string, string>;
+  field: string;
+};
+
+const ErrorMessage: React.FC<ErrorMessageProps> = ({ error, field }) => {
+  return error[field] ? <p className="text-red-500 m-0 p-0">{error[field]}</p> : null;
+};
+
 
 const Signin: React.FC = () => {
-    const { user }: {
+  const { user }: {
     user: User | null,
   } = useUserStore();
   const navigate = useNavigate()
 
   const [email, setEmail] = useState(user?.email || "")
   const [otp, setOTP] = useState("")
+  const [error, setError] = useState({})
 
 
 
 
   const sendOtp = async (email: string): Promise<void> => {
     if (!email) {
-      alert("enter email first")
-    }
+      setError(prev => ({ ...prev, email: "Email is required" }))
+      return
+    }  else {
+            setError(prev => ({ ...prev, email: "" }))
+        }
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/send-email-otp`, {
         method: "POST",
@@ -50,11 +63,23 @@ const Signin: React.FC = () => {
       if (error instanceof Error) {
         // setMessage(error.message);
         console.error(error.message)
-      } 
+      }
     }
   };
 
   const verifyOtp = async (): Promise<void> => {
+     if (!email) {
+      setError(prev => ({ ...prev, email: "Email is required" }))
+      // return
+    }  else {
+            setError(prev => ({ ...prev, email: "" }))
+        }
+    if(!otp) {
+      setError(prev => ({...prev, otp: "Enter OTP"}))
+      return
+    } else {
+      setError(prev => ({...prev, otp: ""}))
+    }
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/verify-email-otp`, {
         method: "POST",
@@ -109,7 +134,7 @@ const Signin: React.FC = () => {
               </div>
 
               {/* Form Fields */}
-              <div className="w-full h-full flex flex-col gap-4">
+              <div className={`w-full h-full flex flex-col ${Object.keys(error).length ? "gap-1" : "gap-4"}`}>
                 <TextField
                   id="email"
                   label="Email"
@@ -120,7 +145,7 @@ const Signin: React.FC = () => {
                   variant="outlined"
                   size="small"
                 />
-
+                <ErrorMessage error={error} field={"email"} />
                 <TextField
                   id="otp"
                   label="OTP"
@@ -132,7 +157,7 @@ const Signin: React.FC = () => {
                   variant="outlined"
                   size="small"
                 />
-
+                <ErrorMessage error={error} field={"otp"} />
                 <p onClick={() => sendOtp(email)} className="text-blue-700 border-b border-blue-700 w-fit cursor-pointer">
                   Resend OTP
                 </p>
@@ -142,13 +167,14 @@ const Signin: React.FC = () => {
                   <label htmlFor="keep-logged-in">Keep me logged in</label>
                 </div>
 
+               
+
+                <div className="text-center text-gray-500 flex flex-col gap-3 w-full">
                 <button onClick={verifyOtp} className="text-lg bg-blue-700 text-white font-semibold p-1.5 w-full rounded-sm">
                   Sign in With OTP
                 </button>
 
                 <GoogleLogin />
-
-                <div className="text-center text-gray-500">
                   <p>
                     Need an account?
                     <span className="text-blue-700 border-b border-blue-700 ml-1">
