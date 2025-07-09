@@ -5,6 +5,7 @@ import {
     useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
+// import { toast } from "react-toastify";
 
 interface User {
     _id: string;
@@ -59,6 +60,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
         localStorage.setItem("access_token", newToken);
         setToken(newToken);
         await verifyToken(newToken);
+        // toast.success("Login Succesfull")
     };
 
     const logout = () => {

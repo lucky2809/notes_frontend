@@ -1,7 +1,7 @@
 // src/pages/OAuthSuccess.tsx
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 const OAuthSuccess = () => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const OAuthSuccess = () => {
 
       // Redirect to your protected route
       navigate("/");
-      toast.success("Login Succesfull")
+      
     } else {
       // Redirect to login if no token found
     //   navigate("/login");
