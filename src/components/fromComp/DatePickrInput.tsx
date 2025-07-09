@@ -5,22 +5,28 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-export default function DatePickerInput() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+type DatePickerInputProps = {
+  value?: string | Dayjs | null; // supports string, Dayjs, or null
+  setValue: (date: Dayjs | any) => void;
+};
+
+const DatePickerInput: React.FC<DatePickerInputProps> = ({ value, setValue }) => {
+  const parsedValue = value ? dayjs(value) : dayjs('2020-01-01'); // default if null/undefined
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker', 'DatePicker']}>
-        
+      <DemoContainer components={['DatePicker']}>
         <DatePicker
-          label="Controlled picker"
-          value={value}
+          label="Date of Birth"
+          value={parsedValue}
           onChange={(newValue) => setValue(newValue)}
           slotProps={{
-    textField: { size: 'small', sx: { width: 900 }, }, // 👈 sets size
-  }}
+            textField: { size: 'small', sx: { width: 900 } },
+          }}
         />
       </DemoContainer>
     </LocalizationProvider>
   );
-}
+};
+
+export default DatePickerInput;
