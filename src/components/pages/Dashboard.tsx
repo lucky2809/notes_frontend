@@ -337,7 +337,7 @@ const Dashboard: React.FC = () => {
           </button>
 
           {/* Notes List */}
-          <div className="flex flex-col gap-2">
+        { notes.length > 0 && <div className="flex flex-col gap-2">
             <p className="text-xl font-semibold">Notes</p>
             {notes.map((note) => (<div onClick={() => openNote(note)} className="p-2 px-5 rounded-sm flex justify-between gap-4 shadow-sm shadow-gray-300">
               <p className="text-lg">{note.title}</p>
@@ -345,7 +345,7 @@ const Dashboard: React.FC = () => {
                 <Icon width={30} icon="material-symbols-light:delete-outline" />
               </button>
             </div>))}
-          </div>
+          </div>}
         </div>
 
         {/* Right Panel */}

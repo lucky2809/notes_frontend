@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import type { User } from '../store/userStore';
 import useUserStore from '../store/userStore';
 import GoogleLogin from './GoogleAuth';
+import { useAuth } from '../auth/AuthProvider';
 
 interface SendOtpResponse {
   message: string;
@@ -29,8 +30,8 @@ const Signin: React.FC = () => {
     user: User | null,
   } = useUserStore();
   const navigate = useNavigate()
-
-  const [email, setEmail] = useState(user?.email || "")
+  const {login} = useAuth()
+  const [email, setEmail] = useState(localStorage.getItem("user_email") || user?.email || "")
   const [otp, setOTP] = useState("")
   const [error, setError] = useState({})
 
@@ -96,7 +97,9 @@ const Signin: React.FC = () => {
       }
 
       localStorage.setItem("access_token", data.token);
-      localStorage.setItem("user_email", email);
+      // localStorage.setItem("user_email", email);
+      await login(data.token)
+
 
       console.log("OTP Verified. You are logged in.");
       navigate("/")

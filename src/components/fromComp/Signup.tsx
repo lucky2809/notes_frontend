@@ -6,6 +6,7 @@ import GoogleLogin from './GoogleAuth';
 
 import useUserStore, { type User } from '../store/userStore';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthProvider';
 
 
 interface SendOtpResponse {
@@ -27,6 +28,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ error, field }) => {
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate()
+
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
   const [dob, setDob] = useState("")
@@ -46,7 +48,7 @@ const SignUp: React.FC = () => {
     } else {
       setError(prev => ({ ...prev, name: "" }))
     }
-     if (!dob) {
+    if (!dob) {
       setError(prev => ({ ...prev, dob: "DOB is required" }))
     } else {
       setError(prev => ({ ...prev, dob: "" }))
@@ -75,6 +77,7 @@ const SignUp: React.FC = () => {
       }
 
       setUser({ email, name })
+      localStorage.setItem("user_email", email);
       navigate("/signin")
     } catch (error: unknown) {
       if (error instanceof Error) {

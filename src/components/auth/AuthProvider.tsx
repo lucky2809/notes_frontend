@@ -55,10 +55,10 @@ export const AuthProvider = ({ children }: { children: any }) => {
         }
     };
 
-    const login = (newToken: string) => {
+    const login = async (newToken: string) => {
         localStorage.setItem("access_token", newToken);
         setToken(newToken);
-        verifyToken(newToken);
+        await verifyToken(newToken);
     };
 
     const logout = () => {
