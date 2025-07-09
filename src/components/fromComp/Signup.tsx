@@ -6,6 +6,7 @@ import GoogleLogin from './GoogleAuth';
 
 import useUserStore, { type User } from '../store/userStore';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 interface SendOtpResponse {
@@ -72,12 +73,15 @@ const SignUp: React.FC = () => {
       const data: SendOtpResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to send OTP");
+        // throw new Error(data.message || "Failed to send OTP");
+        toast.error(data.message || "Failed to send OTP");
+
       }
 
       setUser({ email, name })
       localStorage.setItem("user_email", email);
       navigate("/signin")
+      toast.success("OTP sent to your Email")
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message)

@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import Header from './Header';
 import RightPanel from './RightPanel';
 import { useAuth } from '../auth/AuthProvider';
+import { toast } from 'react-toastify';
 
 type Note = {
   _id: string;
@@ -93,7 +94,9 @@ const Dashboard: React.FC = () => {
         body: JSON.stringify(object)
       });
       if (fetchData.ok) {
-        alert(editMode ? "Note updated!" : "Note created!");
+        // alert(editMode ? "Note updated!" : "Note created!");
+        toast.success(editMode ? "Note updated!" : "Note created!");
+
       } else {
         throw "server error"
       }
@@ -106,13 +109,20 @@ const Dashboard: React.FC = () => {
       // setIsNewNote(false);
       // setEditMode(false);
       // setEditNoteId(null);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
 
     } catch (err: any) {
       logout()
       console.log("Something Went Wrong ..! ", err);
-      alert(err.message)
+      // alert(err.message)
+      toast.error(err.message)
+
     }
   };
+
+
   // Show Save Notes
   useEffect(() => {
     const fetchNotes = async () => {
@@ -127,7 +137,8 @@ const Dashboard: React.FC = () => {
         });
         if (res.status === 401) {
           const error = await res.json();
-          throw new Error(error.message || "Auth Error")
+          // throw new Error(error.message || "Auth Error")
+          toast.error(error.message || "Auth Error")
         }
         if (!res.ok) {
           const data = await res.json();
@@ -161,7 +172,11 @@ const Dashboard: React.FC = () => {
       });
 
       const data = await res.json();
-      alert(data.message);
+      // alert(data.message);
+      toast.success(data.message = "Note Deleted");
+
+
+
 
       setNotes(prev => prev.filter(note => note._id !== id));
       setCurrentNote({
@@ -169,10 +184,16 @@ const Dashboard: React.FC = () => {
         title: "",
         description: ""
       })
+      // window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (err) {
       logout()
       console.error('Error deleting note:', err);
-      alert('Failed to delete note.');
+      // alert('Failed to delete note.');
+      toast.warn('Failed to delete note.');
+
     }
   };
 
@@ -337,7 +358,7 @@ const Dashboard: React.FC = () => {
           </button>
 
           {/* Notes List */}
-        { notes.length > 0 && <div className="flex flex-col gap-2">
+          {notes.length > 0 && <div className="flex flex-col gap-2">
             <p className="text-xl font-semibold">Notes</p>
             {notes.map((note) => (<div onClick={() => openNote(note)} className="p-2 px-5 rounded-sm flex justify-between gap-4 shadow-sm shadow-gray-300">
               <p className="text-lg">{note.title}</p>

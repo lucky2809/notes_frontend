@@ -6,6 +6,7 @@ import type { User } from '../store/userStore';
 import useUserStore from '../store/userStore';
 import GoogleLogin from './GoogleAuth';
 import { useAuth } from '../auth/AuthProvider';
+import { toast } from 'react-toastify';
 
 interface SendOtpResponse {
   message: string;
@@ -57,8 +58,10 @@ const Signin: React.FC = () => {
       const data: SendOtpResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to send OTP");
+        // throw new Error(data.message || "Failed to send OTP");
+        toast.error(data.message || "Failed to send OTP")
       }
+        toast.success("OTP sent")
 
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -93,7 +96,8 @@ const Signin: React.FC = () => {
       const data: VerifyOtpResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error("Invalid or expired OTP");
+        // throw new Error("Invalid or expired OTP");
+        toast.error("Invalid or expired OTP")
       }
 
       localStorage.setItem("access_token", data.token);
@@ -102,6 +106,7 @@ const Signin: React.FC = () => {
 
 
       console.log("OTP Verified. You are logged in.");
+      toast.success("Login in Succesfull")
       navigate("/")
     } catch (error: unknown) {
       if (error instanceof Error) {
