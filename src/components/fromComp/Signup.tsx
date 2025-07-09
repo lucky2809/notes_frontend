@@ -6,7 +6,6 @@ import GoogleLogin from './GoogleAuth';
 
 import useUserStore, { type User } from '../store/userStore';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../auth/AuthProvider';
 
 
 interface SendOtpResponse {
@@ -98,7 +97,7 @@ const SignUp: React.FC = () => {
               className="text-blue-700"
               icon="line-md:sun-rising-twotone-loop"
             />
-            HD
+            NOTES APP
           </div>
 
           <div className="w-full flex flex-col justify-center max-md:justify-start max-md:text-center align-middle px-25 max-xl:px-5 max-lg:px-20 max-md:px-3  h-full max-md:h-fit">
@@ -106,7 +105,7 @@ const SignUp: React.FC = () => {
               {/* Sign Up Text */}
               <div className="flex flex-col gap-1">
                 <p className="text-3xl font-semibold">Sign up</p>
-                <p className="text-gray-500">Sign up to enjoy the features of HD</p>
+                <p className="text-gray-500">Sign up to enjoy the features of NOTES APP</p>
               </div>
               <GoogleLogin />
               {/* Form Fields */}

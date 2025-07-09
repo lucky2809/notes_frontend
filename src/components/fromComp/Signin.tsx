@@ -125,7 +125,7 @@ const Signin: React.FC = () => {
               className="text-blue-700"
               icon="line-md:sun-rising-twotone-loop"
             />
-            HD
+            NOTES APP
           </div>
 
           <div className="w-full flex flex-col justify-center max-md:justify-start max-md:text-center align-middle px-25 max-xl:px-5 max-lg:px-20 max-md:px-3  h-full max-md:h-fit">
@@ -133,7 +133,7 @@ const Signin: React.FC = () => {
               {/* Heading */}
               <div className="flex flex-col gap-1">
                 <p className="text-3xl font-semibold">Sign in</p>
-                <p className="text-gray-500">Sign in to enjoy the features of HD</p>
+                <p className="text-gray-500">Sign in to enjoy the features of NOTES APP</p>
               </div>
 
               {/* Form Fields */}

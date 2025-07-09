@@ -21,7 +21,7 @@ const RightPanel: React.FC<Props> = ({ isNewNote, currentNote, handleChange, clo
       <img
         src="pic-1.jpg"
         className="h-full w-full rounded-xl max-sm:hidden object-cover"
-        alt="Dashboard visual"
+        alt="Notes App"
       />
     );
   }

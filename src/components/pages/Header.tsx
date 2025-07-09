@@ -39,7 +39,7 @@ function Header() {
       <div className="flex justify-between items-center">
         <div className=" w-full text-2xl flex items-center gap-2">
           <Icon width={40} className="text-blue-700" icon="line-md:sun-rising-twotone-loop" />
-          Dashboard
+          NOTES APP
         </div>
         <div className='w-full flex justify-end'>
           <button onClick={logout} className="text-blue-700 border-b border-blue-700 hover:cursor-pointer">Sign Out</button>
