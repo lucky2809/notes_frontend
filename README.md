@@ -1,73 +1,78 @@
-<<<<<<< HEAD
-# notes_frontend
-=======
-# React + TypeScript + Vite
+# React Frontend for Auth Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a React TypeScript frontend application for user authentication and dashboard viewing. It supports email signup/signin and Google OAuth login.
 
-Currently, two official plugins are available:
+## 🧩 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- ✨ User Signup & Signin
+- 🔐 JWT-based Authentication
+- 🌐 Google OAuth Integration
+- 🏠 Protected Dashboard Route
+- 📦 State Management via Context API
+- ✅ Routing with React Router v6+
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Getting Started
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Prerequisites
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- Node.js (v18+ recommended)
+- npm
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 📦 Installation
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+```bash
+# Clone the repository
+git clone https://github.com/your-username/frontend-auth-app.git
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+# Navigate into the project folder
+cd frontend-auth-app
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
->>>>>>> 035cb62 (first commit)
+# Install dependencies
+npm install
+
+
+
+🧪 Run the App
+bash
+Copy code
+npm run dev
+
+The app will start locally at: http://localhost:5173
+
+
+🗂️ Project Structure
+bash
+
+src/
+│
+├── App.tsx                  # Main App with Routing
+├── index.tsx                # ReactDOM entry
+├── components/
+│   ├── fromComp/
+│   │   ├── SignUp.tsx
+│   │   ├── Signin.tsx
+│   │   └── DatePickerInput.tsx
+│   │   └── AuthSuccess.tsx
+│   │   └── GoogleAuth.tsx
+│   ├── pages/
+│   │   └── Dashboard.tsx
+│   │   └── Header.tsx
+│   │   └── RightPanel.tsx
+│   └── auth/
+│       └── AuthProvider.tsx
+│   └── store/
+│       └── userStore.ts
+├── App.css                  # Global styles
+├── main.css 
+└── ...
+🌐 Routes
+Path	Component	Description
+/	Dashboard	Home dashboard (protected)
+/signup	SignUp	User registration
+/signin	Signin	User login
+/oauth-success	OAuthSuccess	Google login callback
+
+🛡️ AuthProvider
+The app uses AuthProvider to manage authentication state and provide access across components via React Context API.
